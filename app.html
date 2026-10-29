@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#8f244e">
+<title>Mother–Baby Diagnostic Bridge</title>
+<style>
+:root{--p:#922650;--pink:#fff0f5;--bg:#fff8fb;--text:#302432;--muted:#7c6b7a;--line:#f0dfe7;--green:#137a50;--red:#b42336}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header{background:linear-gradient(120deg,#812044,#c24d79);color:white;padding:24px 5%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+header h1{font-size:25px;margin:0 0 5px}
+header p{margin:0;color:#ffe8f0}
+header button{background:white;color:var(--p);border:0;border-radius:10px;padding:11px 15px;font-weight:bold}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 95px)}
+aside{background:white;border-right:1px solid var(--line);padding:20px 12px}
+nav{display:grid;gap:7px}
+nav button{border:0;background:white;text-align:left;padding:13px;border-radius:10px;color:#665465}
+nav button.active,nav button:hover{background:var(--pink);color:var(--p);font-weight:bold}
+main{padding:25px;max-width:1450px;width:100%;margin:auto;min-width:0}
+.view{display:none}.view.active{display:block}
+h2{font-size:21px;margin:0 0 16px}
+h3{font-size:17px;margin:0 0 12px}
+p{line-height:1.5}
+.hero{background:linear-gradient(120deg,#922650,#ce638a);border-radius:18px;padding:25px;color:white;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}
+.hero h2{font-size:28px;margin:8px 0}
+.hero p{max-width:600px;color:#ffedf3}
+.hero .emoji{font-size:65px}
+.btn{border:1px solid var(--line);background:white;border-radius:10px;padding:10px 13px;color:var(--text);font-weight:bold}
+.btn.primary{background:var(--p);color:white;border-color:var(--p)}
+.btn.soft{background:var(--pink);color:var(--p)}
+.btn.danger{color:var(--red)}
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}
+.cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 8px 25px #76203b08;min-width:0}
+.stat-label{color:var(--muted);font-size:13px}
+.stat-num{font-size:27px;font-weight:bold;margin-top:8px;color:var(--p)}
+.muted{color:var(--muted);font-size:13px}
+.notice{background:#fff5df;border:1px solid #f0dba9;border-radius:12px;padding:13px;color:#75531a;font-size:13px;margin-bottom:15px}
+.notice.red{background:#fff0f1;border-color:#f3c6cc;color:#922335}
+.notice.blue{background:#eff7ff;border-color:#d3e5f7;color:#285b81}
+form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:grid;gap:6px}
+.field.full{grid-column:1/-1}
+label{font-size:12px;font-weight:bold;color:#695769}
+input,select,textarea{width:100%;padding:11px;border:1px solid #e4d7df;border-radius:9px;background:white;color:var(--text)}
+textarea{min-height:75px;resize:vertical}
+.form-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.progress{height:9px;background:#f3e5eb;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,#d66e96,#922650)}
+.list{display:grid;gap:10px}
+.item{border:1px solid var(--line);padding:12px;border-radius:12px;display:flex;gap:10px;align-items:flex-start}
+.icon{background:var(--pink);width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex-shrink:0;font-size:18px}
+.item strong{display:block;font-size:14px}
+.item small{display:block;color:var(--muted);margin-top:4px;line-height:1.45}
+.pill{display:inline-block;background:#f4edf1;color:#665466;padding:5px 9px;border-radius:30px;font-size:11px;font-weight:bold}
+.pill.good{background:#e3f7ed;color:var(--green)}
+.pill.warn{background:#fff0d3;color:#805600}
+.pill.alert{background:#ffe5e9;color:#a51e32}
+.empty{padding:20px;text-align:center;color:var(--muted)}
+.check{display:flex;align-items:center;gap:10px;border:1px solid var(--line);padding:12px;border-radius:11px;margin-bottom:9px}
+.check input{width:18px;height:18px;accent-color:var(--p)}
+.check span{flex:1}.check.done span{text-decoration:line-through;color:#988a96}
+.reminder{border:1px solid var(--line);padding:13px;border-radius:12px;margin-bottom:10px}
+.reminder strong{display:block;margin:5px 0}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:590px}
+td,th{padding:11px 9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}
+th{color:var(--muted);font-size:11px;text-transform:uppercase}
+.chart{height:220px;width:100%;display:block}
+.mobile-nav{display:none}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:22px}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:1fr}.layout{grid-template-columns:190px 1fr}main{padding:18px}}
+@media(max-width:680px){
+ .layout{display:block}aside{display:none}main{padding:14px 12px 90px}
+ header{padding:20px 15px}header h1{font-size:21px}
+ .hero{padding:19px}.hero h2{font-size:23px}.hero .emoji{font-size:45px}
+ .cols{grid-template-columns:1fr}.stats{gap:10px}.card{padding:14px}
+ form{grid-template-columns:1fr}.field.full{grid-column:auto}
+ .mobile-nav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;z-index:10;background:white;border-top:1px solid var(--line);padding:7px 3px calc(7px + env(safe-area-inset-bottom))}
+ .mobile-nav button{border:0;background:white;color:#786777;font-size:10px;padding:5px 0;display:grid;gap:4px;justify-items:center}
+ .mobile-nav button b{font-size:19px}.mobile-nav button.active{color:var(--p);font-weight:bold}
+}
+@media print{header,aside,.mobile-nav,.no-print{display:none!important}.layout{display:block}main{padding:0}.view{display:none!important}.view.active{display:block!important}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>♡ Mother–Baby Diagnostic Bridge</h1>
+    <p>Maternal wellness and pregnancy record dashboard</p>
+  </div>
+  <button onclick="go('assessment')">＋ New health entry</button>
+</header>
+
+<div class="layout">
+<aside>
+  <nav id="sideNav">
+    <button class="active" data-view="home">⌂ Overview</button>
+    <button data-view="tracker">♧ Pregnancy tracker</button>
+    <button data-view="assessment">✚ Health assessment</button>
+    <button data-view="trends">⌁ Health trends</button>
+    <button data-view="reminders">◷ Smart reminders</button>
+    <button data-view="care">✓ Daily care</button>
+    <button data-view="emergency">♡ Emergency help</button>
+    <button data-view="records">▤ Records & reports</button>
+  </nav>
+  <div class="notice" style="margin-top:25px">Prototype only. Not a diagnosis or a replacement for professional medical care.</div>
+</aside>
+
+<main>
+<section class="view active" id="home">
+  <div class="hero">
+    <div><span class="pill">MOTHER & BABY CARE</span><h2>Small steps. Better-informed care.</h2><p>Track pregnancy milestones, record health readings, organise reminders, and keep important contacts close.</p><button class="btn" onclick="go('tracker')">Set up pregnancy tracker →</button></div>
+    <div class="emoji">🤰🏻</div>
+  </div>
+  <div class="grid stats">
+    <div class="card"><div class="stat-label">Pregnancy progress</div><div class="stat-num" id="statWeek">—</div><div class="muted" id="statTrimester">Add last period date</div></div>
+    <div class="card"><div class="stat-label">Health entries</div><div class="stat-num" id="statEntries">0</div><div class="muted">Saved in this browser</div></div>
+    <div class="card"><div class="stat-label">Pending reminders</div><div class="stat-num" id="statReminders">0</div><div class="muted">Upcoming tasks</div></div>
+    <div class="card"><div class="stat-label">Daily care</div><div class="stat-num" id="statCare">0%</div><div class="muted">Checklist completed</div></div>
+  </div>
+  <div class="grid cols">
+    <div class="card"><h3>Pregnancy journey</h3><div id="homePregnancy" class="empty">Add your last period date in Pregnancy Tracker.</div><button class="btn soft" onclick="go('tracker')">View tracker</button></div>
+    <div class="card"><h3>Quick actions</h3><div class="list">
+      <div class="item"><div class="icon">📈</div><div><strong>Review health trends</strong><small>See your saved readings as simple charts.</small><button class="btn soft" onclick="go('trends')" style="margin-top:8px">Open charts</button></div></div>
+      <div class="item"><div class="icon">🗓️</div><div><strong>Plan your next check-up</strong><small>Create a reminder based on your clinician's advice.</small><button class="btn soft" onclick="go('reminders')" style="margin-top:8px">Add reminder</button></div></div>
+      <div class="item"><div class="icon">🆘</div><div><strong>Know how to get help</strong><small>Keep an emergency contact ready.</small><button class="btn soft" onclick="go('emergency')" style="margin-top:8px">Emergency help</button></div></div>
+    </div></div>
+  </div>
+  <div class="notice" style="margin-top:16px">This app is an educational prototype. Do not use it to decide whether symptoms or readings are safe. Follow advice from a qualified healthcare professional.</div>
+</section>
+
+<section class="view" id="tracker">
+  <h2>Pregnancy journey tracker</h2>
+  <div class="grid cols">
+    <div class="card">
+      <h3>Your pregnancy dates</h3>
+      <p class="muted">Estimated dates based on a typical 40-week pregnancy.</p>
+      <form id="trackerForm">
+        <div class="field full"><label for="lmp">First day of last menstrual period</label><input type="date" id="lmp" required></div>
+        <div class="field full"><label for="dueOverride">Clinician-confirmed due date (optional)</label><input type="date" id="dueOverride"></div>
+        <div class="field full"><label for="pregName">Display name (optional)</label><input id="pregName" maxlength="60" placeholder="My pregnancy"></div>
+        <div class="field full"><button class="btn primary">Save pregnancy details</button></div>
+      </form>
+      <p class="muted">Date calculations are estimates. Your clinician may use ultrasound or other information to adjust dates.</p>
+    </div>
+    <div class="card"><h3>Your timeline</h3><div id="trackerResult" class="empty">Enter your LMP date to see an estimated timeline.</div></div>
+  </div>
+  <div class="grid three" style="margin-top:16px">
+    <div class="card"><h3>🌱 First trimester</h3><p class="muted">Weeks 1–13. Discuss early prenatal care and screening with your clinician.</p></div>
+    <div class="card"><h3>🌼 Second trimester</h3><p class="muted">Weeks 14–27. Ask about recommended scans and tests.</p></div>
+    <div class="card"><h3>🌸 Third trimester</h3><p class="muted">Weeks 28–40. Follow your clinician's visit and birth-planning advice.</p></div>
+  </div>
+</section>
+
+<section class="view" id="assessment">
+  <h2>Health assessment</h2>
+  <div class="notice blue">Prototype guidance only. The example rules are not clinically validated and cannot diagnose a condition. Do not delay medical care because of an app result.</div>
+  <div class="grid cols">
+    <div class="card">
+      <h3>Record a health entry</h3>
+      <form id="assessmentForm">
+        <div class="field"><label for="patientName">Display name / ID</label><input id="patientName" maxlength="70" placeholder="Demo patient 01" required></div>
+        <div class="field"><label for="entryDate">Reading date</label><input id="entryDate" type="date" required></div>
+        <div class="field"><label for="weeks">Pregnancy week (if known)</label><input id="weeks" type="number" min="1" max="45" placeholder="24"></div>
+        <div class="field"><label for="systolic">Systolic BP (mmHg)</label><input id="systolic" type="number" min="40" max="300" placeholder="118"></div>
+        <div class="field"><label for="diastolic">Diastolic BP (mmHg)</label><input id="diastolic" type="number" min="20" max="200" placeholder="76"></div>
+        <div class="field"><label for="hb">Hemoglobin (g/dL)</label><input id="hb" type="number" min="1" max="30" step=".1" placeholder="11.2"></div>
+        <div class="field"><label for="fhr">Fetal heart rate (bpm)</label><input id="fhr" type="number" min="30" max="300" placeholder="If measured by clinician"></div>
+        <div class="field full"><label for="symptoms">Symptoms / concerns</label><textarea id="symptoms" placeholder="Describe any symptoms or concerns"></textarea></div>
+        <div class="field full"><label for="clinician">Clinician / facility (optional)</label><input id="clinician" maxlength="100"></div>
+        <div class="field full"><label for="notes">Notes / follow-up plan (optional)</label><textarea id="notes" placeholder="Advice provided by your clinician"></textarea></div>
+        <div class="field full"><button class="btn primary">Save health entry</button></div>
+      </form>
+    </div>
+    <div class="card"><h3>Prototype guidance</h3><div id="assessmentFeedback" class="notice">Enter readings and symptoms, then save to see example guidance.</div><div class="item"><div class="icon">☎</div><div><strong>When concerned, contact care</strong><small>Severe headache, vision changes, bleeding, severe pain, breathing difficulty, chest pain, fainting, or reduced fetal movement require urgent medical advice.</small></div></div></div>
+  </div>
+</section>
+
+<section class="view" id="trends">
+  <h2>Health trends & charts</h2>
+  <div class="notice blue">Charts show only saved entries from this browser. They are for record-keeping and do not predict outcomes or replace clinical interpretation.</div>
+  <div class="grid cols">
+    <div class="card"><h3>Blood pressure</h3><p class="muted">Systolic and diastolic readings (mmHg)</p><canvas id="bpChart" class="chart"></canvas><div id="bpEmpty" class="empty">Save BP readings to display a chart.</div><p class="muted">Systolic <span style="color:#bd4276">●</span> · Diastolic <span style="color:#4285bd">●</span></p></div>
+    <div class="card"><h3>Hemoglobin</h3><p class="muted">Saved readings (g/dL)</p><canvas id="hbChart" class="chart"></canvas><div id="hbEmpty" class="empty">Save hemoglobin readings to display a chart.</div></div>
+    <div class="card"><h3>Fetal heart rate</h3><p class="muted">Clinician-measured entries only (bpm)</p><canvas id="fhrChart" class="chart"></canvas><div id="fhrEmpty" class="empty">Save clinician-measured readings to display a chart.</div></div>
+    <div class="card"><h3>Latest reading</h3><div id="latestReadings" class="empty">No readings saved yet.</div></div>
+  </div>
+</section>
+
+<section class="view" id="reminders">
+  <h2>Smart reminders</h2>
+  <div class="grid cols">
+    <div class="card"><h3>Create a reminder</h3>
+      <form id="reminderForm">
+        <div class="field full"><label for="remTitle">Reminder title</label><input id="remTitle" maxlength="100" placeholder="Antenatal appointment" required></div>
+        <div class="field"><label for="remDate">Date</label><input id="remDate" type="date" required></div>
+        <div class="field"><label for="remTime">Time</label><input id="remTime" type="time" required></div>
+        <div class="field"><label for="remType">Type</label><select id="remType"><option>Appointment</option><option>Prescribed medicine</option><option>Care task</option><option>Other</option></select></div>
+        <div class="field"><label for="remNote">Note (optional)</label><input id="remNote" maxlength="180" placeholder="Bring records"></div>
+        <div class="field full"><button class="btn primary">＋ Add reminder</button></div>
+      </form>
+      <div class="notice" style="margin-top:15px">Reminders are saved in this browser. Notifications are best-effort and may not work when the app is closed.</div>
+      <button class="btn soft" id="notifyBtn">Enable browser notifications</button>
+    </div>
+    <div class="card"><h3>Your reminders</h3><div id="reminderList" class="empty">No reminders yet.</div></div>
+  </div>
+</section>
+
+<section class="view" id="care">
+  <h2>Daily care checklist</h2>
+  <div class="grid cols">
+    <div class="card"><h3>Today's checklist</h3><div id="carePercent" class="pill">0% complete</div><div class="progress"><span id="careProgress" style="width:0%"></span></div><div id="careList"></div><div class="form-actions"><button class="btn soft" id="resetCare">Reset checklist</button></div></div>
+    <div class="card"><h3>Add your own task</h3><form id="careForm"><div class="field full"><label for="careTitle">Task name</label><input id="careTitle" maxlength="100" placeholder="Pack appointment documents" required></div><div class="field full"><label for="careDesc">Short note</label><input id="careDesc" maxlength="150" placeholder="Optional"></div><div class="field full"><button class="btn primary">Add task</button></div></form><div class="notice" style="margin-top:15px">Follow your clinician's advice about nutrition, fluids, activity, and supplements. This checklist is not a medical prescription.</div></div>
+  </div>
+</section>
+
+<section class="view" id="emergency">
+  <h2>Emergency help</h2>
+  <div class="notice red"><strong>Medical emergency?</strong> Do not wait for this app. Contact local emergency services or go to the nearest emergency department. In India, call 112 for pan-India emergency assistance.</div>
+  <div class="grid cols">
+    <div class="card"><h3>Quick actions</h3><div class="item"><div class="icon">☎</div><div><strong>Emergency services in India</strong><small>112 — pan-India emergency number.</small><div class="form-actions"><a class="btn primary" href="tel:112" style="display:inline-block;text-decoration:none">Call 112</a></div></div></div><div class="item" style="margin-top:10px"><div class="icon">🏥</div><div><strong>Find a nearby hospital</strong><small>Open a map and check the route and availability.</small><div class="form-actions"><a class="btn" href="https://www.google.com/maps/search/hospital+near+me" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none">Find hospitals</a></div></div></div></div>
+    <div class="card"><h3>Save emergency contact</h3><form id="contactForm"><div class="field full"><label for="contactName">Contact name</label><input id="contactName" maxlength="70" placeholder="Family member"></div><div class="field full"><label for="contactPhone">Phone number</label><input id="contactPhone" type="tel" maxlength="25" placeholder="+91..."></div><div class="field full"><button class="btn primary">Save contact</button></div></form><div id="savedContact" style="margin-top:15px"></div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>Warning signs — seek urgent medical help</h3><div class="grid three"><div class="item"><div class="icon">⚠</div><div><strong>Severe headache or vision changes</strong><small>Especially if feeling very unwell.</small></div></div><div class="item"><div class="icon">⚠</div><div><strong>Bleeding or severe abdominal pain</strong><small>Seek prompt medical assessment.</small></div></div><div class="item"><div class="icon">⚠</div><div><strong>Breathing difficulty, chest pain, fainting, or reduced fetal movement</strong><small>Contact emergency services or urgent maternity care.</small></div></div></div></div>
+</section>
+
+<section class="view" id="records">
+  <h2>Records & reports</h2>
+  <div class="notice">Records are stored only in this browser using local storage. They are not encrypted or backed up. Use fictional data in a public GitHub demo.</div>
+  <div class="card"><div class="form-actions no-print" style="margin-top:0;margin-bottom:14px"><button class="btn" id="printBtn">Print / Save PDF</button><button class="btn" id="exportBtn">Export JSON</button><button class="btn danger" id="clearBtn">Clear all entries</button></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Name / ID</th><th>Week</th><th>BP</th><th>Hb</th><th>Prototype guidance</th><th>Action</th></tr></thead><tbody id="recordsBody"><tr><td colspan="7">No entries saved.</td></tr></tbody></table></div></div>
+</section>
+<footer>Mother–Baby Diagnostic Bridge · Educational prototype · Data stays in this browser unless exported</footer>
+</main>
+</div>
+
+<nav class="mobile-nav" id="mobileNav">
+  <button class="active" data-view="home"><b>⌂</b>Home</button>
+  <button data-view="tracker"><b>♧</b>Tracker</button>
+  <button data-view="assessment"><b>✚</b>Assess</button>
+  <button data-view="trends"><b>⌁</b>Trends</button>
+  <button data-view="emergency"><b>♡</b>Help</button>
+</nav>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='motherBabyBridgeModern';
+const today=()=>new Date().toISOString().slice(0,10);
+const defaults=()=>({
+ tracker:{lmp:'',dueOverride:'',name:''},entries:[],reminders:[],
+ contact:{name:'',phone:''},careDate:today(),
+ care:[
+  {id:'water',title:'Drink fluids as advised',desc:'Follow your clinician’s guidance.',done:false},
+  {id:'meal',title:'Eat regular balanced meals',desc:'Follow any dietary advice you have received.',done:false},
+  {id:'rest',title:'Make time for rest',desc:'Adjust activity and rest to your needs.',done:false},
+  {id:'appointment',title:'Check upcoming appointments',desc:'Review your antenatal care plan.',done:false}
+ ]
+});
+function load(){try{return {...defaults(),...JSON.parse(localStorage.getItem(KEY))}}catch(e){return defaults()}}
+let state=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert('Unable to save data in this browser. Please export any available data.');}}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function safeDate(s){if(!s)return null;const d=new Date(s+'T12:00:00');return isNaN(d)?null:d}
+function fmt(s){const d=safeDate(s);return d?d.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):'—'}
+function go(name){
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===name));
+ document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+ if(name==='trends')drawCharts();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-view]');if(b)go(b.dataset.view);
+ const del=e.target.closest('[data-del]');if(del&&confirm('Delete this entry?')){state.entries=state.entries.filter(x=>x.id!==del.dataset.del);save();renderAll();drawCharts()}
+ const rd=e.target.closest('[data-remdone]');if(rd){const r=state.reminders.find(x=>x.id===rd.dataset.remdone);if(r){r.done=!r.done;save();renderAll()}}
+ const rx=e.target.closest('[data-remdel]');if(rx&&confirm('Delete this reminder?')){state.reminders=state.reminders.filter(x=>x.id!==rx.dataset.remdel);save();renderAll()}
+ const cc=e.target.closest('[data-care]');if(cc){const t=state.care.find(x=>x.id===cc.dataset.care);if(t){t.done=cc.checked;save();renderCare();renderStats()}}
+ const cd=e.target.closest('[data-caredel]');if(cd&&confirm('Remove this custom task?')){state.care=state.care.filter(x=>x.id!==cd.dataset.caredel);save();renderCare();renderStats()}
+});
+function pregnancy(){
+ const l=safeDate(state.tracker.lmp);if(!l)return null;
+ const now=safeDate(today()),days=Math.floor((now-l)/86400000);
+ const due=state.tracker.dueOverride?safeDate(state.tracker.dueOverride):new Date(l.getTime()+280*86400000);
+ return {days,week:Math.floor(days/7),day:days%7,due:due.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}),remaining:Math.ceil((due-now)/86400000)};
+}
+function renderTracker(){
+ const p=pregnancy();
+ if(!p){$('statWeek').textContent='—';$('statTrimester').textContent='Add last period date';$('trackerResult').innerHTML='Enter your LMP date to see an estimated timeline.';$('homePregnancy').textContent='Add your last period date in Pregnancy Tracker.';return}
+ const valid=p.days>=0&&p.days<=315,trim=p.week<14?'First trimester':p.week<28?'Second trimester':'Third trimester',pct=Math.max(0,Math.min(100,p.days/280*100));
+ $('statWeek').textContent=valid?'Week '+(p.week+1):'Check dates';$('statTrimester').textContent=valid?trim:'Date outside usual range';
+ $('trackerResult').innerHTML=`<div class="notice"><div class="muted">Estimated due date</div><strong style="font-size:23px;color:var(--p)">${esc(p.due)}</strong><div class="muted">${p.remaining>=0?p.remaining+' days to estimated due date':Math.abs(p.remaining)+' days past estimated due date'}</div></div><strong>${valid?'Week '+(p.week+1)+', day '+(p.day+1):'Please verify entered dates'} · ${trim}</strong><div class="progress"><span style="width:${pct}%"></span></div><div class="muted">${Math.round(pct)}% of a 40-week estimate</div><p class="muted">Dates are estimates only. Ask your clinician if you are unsure.</p>`;
+ $('homePregnancy').innerHTML=`<strong style="font-size:22px;color:var(--p)">${esc(p.due)}</strong><p class="muted">Estimated due date · ${valid?trim+' · Week '+(p.week+1):'Please verify dates'}</p><div class="progress"><span style="width:${pct}%"></span></div><div class="muted">${Math.round(pct)}% of a 40-week estimate</div>`;
+}
+$('trackerForm').addEventListener('submit',e=>{e.preventDefault();state.tracker={lmp:$('lmp').value,dueOverride:$('dueOverride').value,name:$('pregName').value.trim()};save();renderAll();alert('Pregnancy tracker saved. Dates are estimates only.');});
+function num(id){return $(id).value===''?null:Number($(id).value)}
+function guidance(e){
+ const s=(e.symptoms||'').toLowerCase();
+ const urgent=['severe headache','blurred vision','vision changes','bleeding','severe abdominal pain','reduced fetal movement','difficulty breathing','shortness of breath','chest pain','fainting'];
+ if(urgent.some(x=>s.includes(x)))return {label:'Seek urgent assessment',kind:'alert',text:'A symptom entered may need urgent medical assessment. Contact a healthcare professional or emergency service.'};
+ if(e.systolic>=160||e.diastolic>=110)return {label:'Urgent clinical assessment',kind:'alert',text:'This example threshold may indicate a serious reading in pregnancy. Seek urgent medical assessment.'};
+ if(e.systolic>=140||e.diastolic>=90)return {label:'Prompt clinical review',kind:'warn',text:'Contact a healthcare professional promptly for appropriate measurement and assessment.'};
+ if(!e.systolic||!e.diastolic||!e.weeks||!e.symptoms)return {label:'Information incomplete',kind:'warn',text:'Some information is missing. This is not a risk classification.'};
+ return {label:'No example trigger detected',kind:'good',text:'No configured example trigger was detected. This does not mean the pregnancy is low risk.'};
+}
+function guidanceHtml(g){return `<span class="pill ${g.kind}">${esc(g.label)}</span><p>${esc(g.text)}</p><p class="muted">Prototype guidance only — not a diagnosis.</p>`}
+$('assessmentForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const row={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:$('patientName').value.trim(),date:$('entryDate').value||today(),weeks:num('weeks'),systolic:num('systolic'),diastolic:num('diastolic'),hb:num('hb'),fhr:num('fhr'),symptoms:$('symptoms').value.trim(),clinician:$('clinician').value.trim(),notes:$('notes').value.trim()};
+ row.guidance=guidance(row);state.entries.push(row);save();
+ $('assessmentFeedback').className='notice '+(row.guidance.kind==='alert'?'red':'');
+ $('assessmentFeedback').innerHTML=guidanceHtml(row.guidance);
+ e.target.reset();$('entryDate').value=today();renderAll();drawCharts();
+ alert('Saved in this browser. This prototype guidance is not a diagnosis.');
+});
+function renderRecords(){
+ const rows=[...state.entries].sort((a,b)=>b.date.localeCompare(a.date));
+ $('recordsBody').innerHTML=rows.length?rows.map(e=>`<tr><td>${esc(fmt(e.date))}</td><td>${esc(e.name)}</td><td>${e.weeks??'—'}</td><td>${e.systolic??'—'} / ${e.diastolic??'—'}</td><td>${e.hb??'—'}</td><td><span class="pill ${e.guidance?.kind||'warn'}">${esc(e.guidance?.label||'Not assessed')}</span></td><td><button class="btn danger" data-del="${esc(e.id)}">Delete</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">No entries saved.</td></tr>';
+}
+function renderReminders(){
+ const rows=[...state.reminders].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ $('reminderList').innerHTML=rows.length?rows.map(r=>`<div class="reminder"><span class="pill ${r.done?'good':'warn'}">${r.done?'Completed':'Pending'}</span><div class="muted">${esc(fmt(r.date))} · ${esc(r.time)}</div><strong>${esc(r.title)}</strong><div class="muted">${esc(r.type)}${r.note?' · '+esc(r.note):''}</div><div class="form-actions"><button class="btn soft" data-remdone="${esc(r.id)}">${r.done?'Undo':'Mark done'}</button><button class="btn danger" data-remdel="${esc(r.id)}">Delete</button></div></div>`).join(''):'<div class="empty">No reminders yet.</div>';
+}
+$('reminderForm').addEventListener('submit',e=>{e.preventDefault();state.reminders.push({id:Date.now().toString(36),title:$('remTitle').value.trim(),date:$('remDate').value,time:$('remTime').value,type:$('remType').value,note:$('remNote').value.trim(),done:false});save();e.target.reset();$('remDate').value=today();renderAll();});
+$('notifyBtn').addEventListener('click',async()=>{
+ if(!('Notification'in window)){alert('Notifications are not supported by this browser. Your reminder list still works.');return}
+ try{const p=await Notification.requestPermission();alert(p==='granted'?'Notifications allowed where supported. Keep the app open for best results.':'Permission not granted. You can still view reminders in the app.')}catch(e){alert('Could not request notification permission.')}
+});
+function renderCare(){
+ if(state.careDate!==today()){state.careDate=today();state.care=state.care.map(t=>({...t,done:false}));save()}
+ $('careList').innerHTML=state.care.map(t=>`<label class="check ${t.done?'done':''}"><input type="checkbox" data-care="${esc(t.id)}" ${t.done?'checked':''}><span><strong>${esc(t.title)}</strong><small class="muted">${esc(t.desc||'Personal task')}</small></span>${t.custom?`<button type="button" class="btn danger" data-caredel="${esc(t.id)}">×</button>`:''}</label>`).join('')||'<div class="empty">No tasks. Add one below.</div>';
+ renderStats();
+}
+$('careForm').addEventListener('submit',e=>{e.preventDefault();state.care.push({id:'c'+Date.now(),title:$('careTitle').value.trim(),desc:$('careDesc').value.trim(),done:false,custom:true});save();e.target.reset();renderCare();});
+$('resetCare').addEventListener('click',()=>{if(confirm('Reset checklist for today?')){state.care=state.care.map(t=>({...t,done:false}));state.careDate=today();save();renderCare()}});
+$('contactForm').addEventListener('submit',e=>{e.preventDefault();state.contact={name:$('contactName').value.trim(),phone:$('contactPhone').value.trim()};save();renderContact();alert('Emergency contact saved on this device.')});
+function renderContact(){
+ $('contactName').value=state.contact.name||'';$('contactPhone').value=state.contact.phone||'';
+ const tel=(state.contact.phone||'').replace(/[^\d+]/g,'');
+ $('savedContact').innerHTML=(state.contact.name||state.contact.phone)?`<div class="item"><div class="icon">♡</div><div><strong>${esc(state.contact.name||'Emergency contact')}</strong><small>${esc(state.contact.phone||'No phone number')}</small>${tel?`<div class="form-actions"><a class="btn soft" href="tel:${esc(tel)}" style="display:inline-block;text-decoration:none">Call contact</a></div>`:''}</div></div>`:'<div class="empty">No emergency contact saved.</div>';
+}
+function renderStats(){
+ $('statEntries').textContent=state.entries.length;
+ $('statReminders').textContent=state.reminders.filter(r=>!r.done&&r.date>=today()).length;
+ const total=state.care.length,done=state.care.filter(t=>t.done).length,pct=total?Math.round(done/total*100):0;
+ $('statCare').textContent=pct+'%';$('carePercent').textContent=pct+'% complete';$('careProgress').style.width=pct+'%';
+}
+function chart(id,series,labels,colors,emptyId){
+ const c=$(id),ctx=c.getContext('2d'),box=c.getBoundingClientRect(),w=Math.max(box.width,260),h=220,dpr=window.devicePixelRatio||1;
+ c.width=w*dpr;c.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+ const vals=series.flatMap(s=>s.values.filter(v=>v!==null&&Number.isFinite(Number(v))).map(Number));
+ if(!vals.length){c.classList.add('hidden');$(emptyId).classList.remove('hidden');return}
+ c.classList.remove('hidden');$(emptyId).classList.add('hidden');
+ const min=Math.min(...vals),max=Math.max(...vals),lo=min===max?min-1:min-(max-min)*.15,hi=min===max?max+1:max+(max-min)*.15;
+ const p={l:37,r:12,t:12,b:28},pw=w-p.l-p.r,ph=h-p.t-p.b;
+ ctx.font='11px Arial';ctx.strokeStyle='#f0dfe7';ctx.fillStyle='#7c6b7a';
+ for(let i=0;i<4;i++){let y=p.t+ph*i/3;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(w-p.r,y);ctx.stroke();ctx.fillText((hi-(hi-lo)*i/3).toFixed(0),2,y+4)}
+ series.forEach((s,j)=>{ctx.strokeStyle=colors[j];ctx.fillStyle=colors[j];ctx.lineWidth=2.5;ctx.beginPath();let started=false;s.values.forEach((v,i)=>{if(v===null||!Number.isFinite(Number(v))){started=false;return}const x=p.l+(labels.length<2?pw/2:pw*i/(labels.length-1)),y=p.t+ph-(Number(v)-lo)/(hi-lo)*ph;if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y);ctx.fillRect(x-3,y-3,6,6)});ctx.stroke()});
+ labels.forEach((l,i)=>{if(i===0||i===labels.length-1||labels.length<=5||i%Math.ceil(labels.length/4)===0){const x=p.l+(labels.length<2?pw/2:pw*i/(labels.length-1));ctx.fillStyle='#7c6b7a';ctx.fillText(l,x-12,h-7)}});
+}
+function trendRows(key){return [...state.entries].filter(e=>e[key]!==null&&e[key]!==undefined&&Number.isFinite(Number(e[key]))).sort((a,b)=>a.date.localeCompare(b.date)).slice(-12)}
+function drawCharts(){
+ const bp=[...state.entries].filter(e=>e.systolic!==null||e.diastolic!==null).sort((a,b)=>a.date.localeCompare(b.date)).slice(-12);
+ chart('bpChart',[{values:bp.map(e=>e.systolic)},{values:bp.map(e=>e.diastolic)}],bp.map(e=>{const d=safeDate(e.date);return d?`${d.getDate()}/${d.getMonth()+1}`:'?'}),['#bd4276','#4285bd'],'bpEmpty');
+ for(const [key,id,empty,color] of [['hb','hbChart','hbEmpty','#8b58c5'],['fhr','fhrChart','fhrEmpty','#16845b']]){
+  const rows=trendRows(key);chart(id,[{values:rows.map(e=>e[key])}],rows.map(e=>{const d=safeDate(e.date);return d?`${d.getDate()}/${d.getMonth()+1}`:'?'}),[color],empty);
+ }
+ const latest=[...state.entries].sort((a,b)=>b.date.localeCompare(a.date))[0];
+ $('latestReadings').innerHTML=latest?`<strong>${esc(latest.name)}</strong><p class="muted">${esc(fmt(latest.date))}</p><p>BP: ${latest.systolic??'—'} / ${latest.diastolic??'—'} mmHg</p><p>Hb: ${latest.hb??'—'} g/dL</p><p>Fetal heart rate: ${latest.fhr??'—'} bpm</p>${guidanceHtml(latest.guidance||{label:'Not assessed',kind:'warn',text:''})}`:'No readings saved yet.';
+}
+function renderAll(){renderTracker();renderRecords();renderReminders();renderCare();renderContact();renderStats();if($('trends').classList.contains('active'))drawCharts()}
+$('exportBtn').addEventListener('click',()=>{
+ const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),app:'Mother–Baby Diagnostic Bridge prototype',data:state},null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mother-baby-demo-data.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+});
+$('printBtn').addEventListener('click',()=>{go('records');window.print()});
+$('clearBtn').addEventListener('click',()=>{if(confirm('Permanently clear all health entries in this browser?')){state.entries=[];save();renderAll();drawCharts()}});
+window.addEventListener('resize',()=>{if($('trends').classList.contains('active'))drawCharts()});
+$('entryDate').value=today();$('remDate').value=today();
+$('lmp').value=state.tracker.lmp||'';$('dueOverride').value=state.tracker.dueOverride||'';$('pregName').value=state.tracker.name||'';
+renderAll();
+</script>
+</body>
+</html>
